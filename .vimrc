@@ -52,6 +52,11 @@ set visualbell
 set wildmenu
 "добавить в поиск подпапки
 set path+=**
+"игнорить венв-папки с питонлибами
+set wildignore+=**/venv/**
+set wildignore+=**/__pycache__/**
+"убрать своп-файлы
+set noswapfile
 
 "Настройки дефолтного браузера файлов
 let g:netrw_banner = 0
@@ -78,8 +83,8 @@ let g:syntastic_check_on_wq = 0
 
 
 "команда для создания индекса тегов
-"command -bar CtagsExecute silent !ctags -R * 2> /dev/null &
-command -bar CtagsExecute silent !ctags -R --languages=python * 2> /dev/null &
+command -bar CtagsExecute silent !ctags -R --exclude=venv * 2> /dev/null &
+"command -bar CtagsExecute silent !ctags -R --languages=python --exclude=venv * 2> /dev/null &
 command -bar CtagsRedraw redraw!
 command Ctags CtagsExecute|CtagsRedraw
 
@@ -87,6 +92,11 @@ command Ctags CtagsExecute|CtagsRedraw
 if has("autocmd")
     autocmd FileType python setlocal makeprg=python\ -m\ unittest\  
     autocmd FileType python compiler pyunit
+endif
+
+"при записи питон файлов вызывать сразу ctags
+if has("autocmd")
+    autocmd BufWritePost *.py Ctags
 endif
 
 "переназначение клавиш
